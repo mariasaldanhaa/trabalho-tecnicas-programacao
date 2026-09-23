@@ -1,0 +1,8 @@
+# depslib dependency file v1.0
+1790109961 source:c:\users\admin\documents\trabalho-tecnicas-programacao\tecnicas-programacao\grafo.c
+	<stdio.h>
+	<stdlib.h>
+	"grafo.h"
+
+1790107385 c:\users\admin\documents\trabalho-tecnicas-programacao\tecnicas-programacao\grafo.h
+
