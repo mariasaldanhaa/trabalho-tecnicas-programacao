@@ -12,4 +12,5 @@ typedef struct grafo {
 
 Grafo GGcriaGrafo(int v, int a);
 Grafo GGdestroiGrafo(Grafo grafo);
-int GVcriaVertice(Grafo grafo, int v1, int v2);
+int GVcriaVertice(Grafo grafo);
+int GAcriaAresta(Grafo p, int v1, int v2);

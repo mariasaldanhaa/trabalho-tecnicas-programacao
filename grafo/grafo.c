@@ -22,7 +22,7 @@ Grafo GGcriaGrafo(int v, int a) {
     p->a = a;
 
     p->vertices = malloc(v * sizeof(int)); // reserva um espaco de memoria para
-    p->arestas = malloc(a * sizeof(int));  // para cada v e a
+    p->arestas = malloc(p->a * 2 * sizeof(int)); // esta sendo reservado espaco duas vezes, porque sao dois vertices
 
     if (p->vertices == NULL || p ->arestas == NULL) {
         return NULL;
@@ -49,18 +49,21 @@ Grafo GGdestroiGrafo(Grafo p) {
 int GVcriaVertice(Grafo p) {
     if (p->V < p->v) {
         p->V++; // cada vertice criado, aumenta mais um para o atual
-        p->vertices[p->V - 1] = p->V; // vai alocando na lista de vertices
+        p->vertices[p->V - 1] = p->V; // armazena o identificador do vertice no vetor
     } else {
         return 0;
     }
     return p->V;
 }
 
-// funcao para criar aresta (nao foi finalizada ainda)
-int GAcriaAresta(Grafo p, ) {
+// funcao para criar aresta
+int GAcriaAresta(Grafo p, int v1, int v2) {
     if (p->A < p->a) {
-        p->A++
-        p->arestas[p->A - 1] = p->A;
+        p->A++; // identificador para cada aresta
+        p->arestas[(p->A - 1) * 2] = v1; // Cada aresta ocupa duas posicoes no vetor: v1 e v2
+        p->arestas[((p->A - 1) * 2) + 1] = v2;
+
+        return p->A;
     } else {
         return 0;
     }
