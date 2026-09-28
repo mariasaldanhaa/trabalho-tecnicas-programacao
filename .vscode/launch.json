@@ -8,8 +8,8 @@
       "args": [],
       "stopAtEntry": false,
       "externalConsole": true,
-      "cwd": "c:/Users/Admin/Documents/trabalho-tecnicas-programacao",
-      "program": "c:/Users/Admin/Documents/trabalho-tecnicas-programacao/build/Debug/outDebug",
+      "cwd": "c:/Users/Admin/Documents/trabalho-tecnicas-programacao/grafo",
+      "program": "c:/Users/Admin/Documents/trabalho-tecnicas-programacao/grafo/build/Debug/outDebug",
       "MIMode": "gdb",
       "miDebuggerPath": "gdb",
       "setupCommands": [
