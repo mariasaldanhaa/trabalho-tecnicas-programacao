@@ -18,3 +18,16 @@
 
 1790213593 c:\users\admin\documents\trabalho-tecnicas-programacao\grafo\grafo.h
 
+1792314255 source:c:\users\duda\documents\faculdade\tecnicas-programacao\arvore-b\trabalho-tecnicas-programacao\grafo\grafo.c
+	<stdio.h>
+	<stdlib.h>
+	"grafo.h"
+
+1792314037 c:\users\duda\documents\faculdade\tecnicas-programacao\arvore-b\trabalho-tecnicas-programacao\grafo\grafo.h
+
+1792314367 source:c:\users\duda\documents\faculdade\tecnicas-programacao\arvore-b\trabalho-tecnicas-programacao\grafo\main.c
+	<stdio.h>
+	<stdlib.h>
+	<stdbool.h>
+	"grafo.h"
+
