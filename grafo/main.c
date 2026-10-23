@@ -25,12 +25,26 @@ int main() {
         printf("\n13 - Pegar id da primeira aresta");
         printf("\n14 - Pegar id da proxima aresta");
         printf("\n15 - Pegar o numero de vertices no grafo");
-        printf("\n16 - Sair");
+        printf("\n16 - Pegar o numero maximo de vertices");
+        printf("\n17 - Pegar o numero de arestas");
+        printf("\n18 - Pegar o numero maximo de arestas");
+        printf("\n19 - Carregar grafo de arquivo");
+        printf("\n20 - Salvar grafo em arquivo");
+        printf("\n21 - Pegar grau de um vertice");
+        printf("\n22 - Pegar primeira aresta incidente");
+        printf("\n23 - Pegar proxima aresta incidente");
+        printf("\n24 - Pegar primeira aresta de entrada");
+        printf("\n25 - Pegar proxima aresta de entrada");
+        printf("\n26 - Pegar primeira aresta de saida");
+        printf("\n27 - Pegar proxima aresta de saida");
+        printf("\n28 - Verificar se aresta e laco");
+        printf("\n29 - Pegar alfa, omega e vizinho");
+        printf("\n30 - Sair");
 
         printf("\nOpcao: ");
         scanf("%d", &opcao);
 
-        while (opcao < 1 || opcao > 17) {
+        while (opcao < 1 || opcao > 30) {
             printf("\n---- OPCOES ----");
             printf("\n1 - Criar Grafo");
             printf("\n2 - Deletar Grafo");
@@ -46,7 +60,21 @@ int main() {
             printf("\n12 - Pegar id do proximo vertice");
             printf("\n14 - Pegar id da proxima aresta");
             printf("\n15 - Pegar o numero de vertices no grafo");
-            printf("\n16 - Sair");
+            printf("\n16 - Pegar o numero maximo de vertices");
+            printf("\n17 - Pegar o numero de arestas");
+            printf("\n18 - Pegar o numero maximo de arestas");
+            printf("\n19 - Carregar grafo de arquivo");
+            printf("\n20 - Salvar grafo em arquivo");
+            printf("\n21 - Pegar grau de um vertice");
+            printf("\n22 - Pegar primeira aresta incidente");
+            printf("\n23 - Pegar proxima aresta incidente");
+            printf("\n24 - Pegar primeira aresta de entrada");
+            printf("\n25 - Pegar proxima aresta de entrada");
+            printf("\n26 - Pegar primeira aresta de saida");
+            printf("\n27 - Pegar proxima aresta de saida");
+            printf("\n28 - Verificar se aresta e laco");
+            printf("\n29 - Pegar alfa, omega e vizinho");
+            printf("\n30 - Sair");
 
             printf("\nOpcao: ");
             scanf("%d", &opcao);
@@ -241,7 +269,7 @@ int main() {
                 }
                 break;
             case 12:
-                int idProximo, v1;
+                int idProximo;
 
                 printf("\n -- ID DO PROXIMO VERTICE --");
                 printf("\nInforme o id do vertice: ");
@@ -293,7 +321,144 @@ int main() {
                     printf("Nao foi criado nenhum grafo");
                 }
                 break;
+
             case 16:
+                if (p != NULL)
+                    printf("\nMaximo de vertices: %d", GInumeroVerticesMax(p));
+                else
+                    printf("\nNao foi criado nenhum grafo");
+                break;
+            case 17:
+                if (p != NULL)
+                    printf("\nNumero de arestas: %d", GInumeroArestas(p));
+                else
+                    printf("\nNao foi criado nenhum grafo");
+                break;
+            case 18:
+                if (p != NULL)
+                    printf("\nMaximo de arestas: %d", GInumeroArestasMax(p));
+                else
+                    printf("\nNao foi criado nenhum grafo");
+                break;
+            case 19: {
+                char arquivo[256];
+                printf("\nNome do arquivo para carregar: ");
+                scanf("%255s", arquivo);
+                Grafo novo = GGcarregaGrafo(arquivo);
+                if (novo != NULL) {
+                    if (p != NULL)
+                        p = GGdestroiGrafo(p);
+                    p = novo;
+                    printf("\nGrafo carregado!");
+                } else {
+                    printf("\nNao foi possivel carregar o grafo.");
+                }
+                break;
+            }
+            case 20: {
+                char arquivo[256];
+                printf("\nNome do arquivo para salvar: ");
+                scanf("%255s", arquivo);
+                if (p != NULL && GBsalvaGrafo(p, arquivo))
+                    printf("\nGrafo salvo!");
+                else
+                    printf("\nNao foi possivel salvar o grafo.");
+                break;
+            }
+            case 21:
+                printf("\nInforme o ID do vertice: ");
+                scanf("%d", &v1);
+                if (p != NULL)
+                    printf("\nGrau do vertice: %d", GIpegaGrau(p, v1));
+                else
+                    printf("\nNao foi criado nenhum grafo");
+                break;
+            case 22:
+                printf("\nInforme o ID do vertice: ");
+                scanf("%d", &v1);
+                if (p != NULL)
+                    printf("\nPrimeira aresta incidente: %d", GAprimaAresta(p, v1));
+                else
+                    printf("\nNao foi criado nenhum grafo");
+                break;
+            case 23: {
+                int a1;
+                printf("\nInforme o ID do vertice: ");
+                scanf("%d", &v1);
+                printf("Informe o ID da aresta anterior: ");
+                scanf("%d", &a1);
+                if (p != NULL)
+                    printf("\nProxima aresta incidente: %d", GAproxAresta(p, v1, a1));
+                else
+                    printf("\nNao foi criado nenhum grafo");
+                break;
+            }
+            case 24:
+                printf("\nInforme o ID do vertice: ");
+                scanf("%d", &v1);
+                if (p != NULL)
+                    printf("\nPrimeira aresta de entrada: %d", GAprimaEntrada(p, v1));
+                else
+                    printf("\nNao foi criado nenhum grafo");
+                break;
+            case 25: {
+                int a1;
+                printf("\nInforme o ID do vertice: ");
+                scanf("%d", &v1);
+                printf("Informe o ID da aresta anterior: ");
+                scanf("%d", &a1);
+                if (p != NULL)
+                    printf("\nProxima aresta de entrada: %d", GAproxEntrada(p, v1, a1));
+                else
+                    printf("\nNao foi criado nenhum grafo");
+                break;
+            }
+            case 26:
+                printf("\nInforme o ID do vertice: ");
+                scanf("%d", &v1);
+                if (p != NULL)
+                    printf("\nPrimeira aresta de saida: %d", GAprimaSaida(p, v1));
+                else
+                    printf("\nNao foi criado nenhum grafo");
+                break;
+            case 27: {
+                int a1;
+                printf("\nInforme o ID do vertice: ");
+                scanf("%d", &v1);
+                printf("Informe o ID da aresta anterior: ");
+                scanf("%d", &a1);
+                if (p != NULL)
+                    printf("\nProxima aresta de saida: %d", GAproxSaida(p, v1, a1));
+                else
+                    printf("\nNao foi criado nenhum grafo");
+                break;
+            }
+            case 28: {
+                int a1;
+                printf("\nInforme o ID da aresta: ");
+                scanf("%d", &a1);
+                if (p != NULL)
+                    printf("\nAresta e laco? %s", GBarestaLaco(p, a1) ? "Sim" : "Nao");
+                else
+                    printf("\nNao foi criado nenhum grafo");
+                break;
+            }
+            case 29: {
+                int a1;
+                printf("\nInforme o ID da aresta: ");
+                scanf("%d", &a1);
+                if (p != NULL && GBexisteIdAresta(p, a1)) {
+                    printf("\nAlfa: %d", GAlfa(p, a1));
+                    printf("\nOmega: %d", GOmega(p, a1));
+                    printf("\nInforme o outro vertice para consultar vizinho: ");
+                    scanf("%d", &v1);
+                    printf("\nVizinho: %d", GVvizinho(p, a1, v1));
+                } else {
+                    printf("\nGrafo nao criado ou aresta inexistente");
+                }
+                break;
+            }
+            case 30:
                 continuar = 0;
                 break;
         }

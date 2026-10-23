@@ -257,3 +257,175 @@ int GInumeroVertices(Grafo p) {
 
     return nv;
 }
+
+
+
+
+// numero maximo de vertices previsto
+int GInumeroVerticesMax(Grafo p) {
+    if (p == NULL) return 0;
+    return p->v;
+}
+
+// numero atual de arestas
+int GInumeroArestas(Grafo p) {
+    if (p == NULL) return 0;
+    return p->A;
+}
+
+// numero maximo de arestas previsto
+int GInumeroArestasMax(Grafo p) {
+    if (p == NULL) return 0;
+    return p->a;
+}
+
+// carrega grafo de arquivo: primeira linha V A; depois, uma aresta por linha
+Grafo GGcarregaGrafo(const char *f) {
+    FILE *arq;
+    int nv, na, v1, v2;
+    Grafo p;
+
+    if (f == NULL || (arq = fopen(f, "r")) == NULL) return NULL;
+    if (fscanf(arq, "%d %d", &nv, &na) != 2 || nv <= 0 || na < 0) {
+        fclose(arq);
+        return NULL;
+    }
+
+    p = GGcriaGrafo(nv, na > 0 ? na : 1);
+    if (p == NULL) {
+        fclose(arq);
+        return NULL;
+    }
+
+    for (int i = 0; i < nv; i++) {
+        if (GVcriaVertice(p) == 0) {
+            GGdestroiGrafo(p);
+            fclose(arq);
+            return NULL;
+        }
+    }
+
+    for (int i = 0; i < na; i++) {
+        if (fscanf(arq, "%d %d", &v1, &v2) != 2 ||
+            GAcriaAresta(p, v1, v2) == 0) {
+            GGdestroiGrafo(p);
+            fclose(arq);
+            return NULL;
+        }
+    }
+
+    fclose(arq);
+    return p;
+}
+
+// salva grafo no formato definido no enunciado
+int GBsalvaGrafo(Grafo p, const char *f) {
+    FILE *arq;
+    if (p == NULL || f == NULL || (arq = fopen(f, "w")) == NULL) return 0;
+
+    fprintf(arq, "%d %d\n", p->V, p->A);
+    for (int i = 0; i < p->A; i++) {
+        fprintf(arq, "%d %d\n", p->arestas[2 * i], p->arestas[2 * i + 1]);
+    }
+
+    if (fclose(arq) != 0) return 0;
+    return 1;
+}
+
+// grau do vertice (um laco conta duas vezes, como usual em grafos nao dirigidos)
+int GIpegaGrau(Grafo p, int v) {
+    int grau = 0;
+    if (!GBexisteIdVertice(p, v)) return 0;
+
+    for (int i = 0; i < p->A; i++) {
+        int v1 = p->arestas[2 * i];
+        int v2 = p->arestas[2 * i + 1];
+        if (v1 == v) grau++;
+        if (v2 == v) grau++;
+    }
+    return grau;
+}
+
+// primeira aresta incidente ao vertice (grafo nao dirigido)
+int GAprimaAresta(Grafo p, int v) {
+    if (!GBexisteIdVertice(p, v)) return 0;
+    for (int i = 0; i < p->A; i++) {
+        if (p->arestas[2*i] == v || p->arestas[2*i+1] == v) return i + 1;
+    }
+    return 0;
+}
+
+// proxima aresta incidente ao vertice (grafo nao dirigido)
+int GAproxAresta(Grafo p, int v, int a1) {
+    if (!GBexisteIdVertice(p, v)) return 0;
+    for (int i = a1; i < p->A; i++) {
+        if (p->arestas[2*i] == v || p->arestas[2*i+1] == v) return i + 1;
+    }
+    return 0;
+}
+
+// primeira aresta que chega ao vertice (grafo dirigido)
+int GAprimaEntrada(Grafo p, int v) {
+    if (!GBexisteIdVertice(p, v)) return 0;
+    for (int i = 0; i < p->A; i++) {
+        if (p->arestas[2*i+1] == v) return i + 1;
+    }
+    return 0;
+}
+
+// proxima aresta que chega ao vertice (grafo dirigido)
+int GAproxEntrada(Grafo p, int v, int a1) {
+    if (!GBexisteIdVertice(p, v)) return 0;
+    for (int i = a1; i < p->A; i++) {
+        if (p->arestas[2*i+1] == v) return i + 1;
+    }
+    return 0;
+}
+
+// primeira aresta que sai do vertice (grafo dirigido)
+int GAprimaSaida(Grafo p, int v) {
+    if (!GBexisteIdVertice(p, v)) return 0;
+    for (int i = 0; i < p->A; i++) {
+        if (p->arestas[2*i] == v) return i + 1;
+    }
+    return 0;
+}
+
+// proxima aresta que sai do vertice (grafo dirigido)
+int GAproxSaida(Grafo p, int v, int a1) {
+    if (!GBexisteIdVertice(p, v)) return 0;
+    for (int i = a1; i < p->A; i++) {
+        if (p->arestas[2*i] == v) return i + 1;
+    }
+    return 0;
+}
+
+// informa se a aresta e um laco
+int GBarestaLaco(Grafo p, int a) {
+    if (!GBexisteIdAresta(p, a)) return 0;
+    return p->arestas[2*(a-1)] == p->arestas[2*(a-1)+1];
+}
+
+// vertice de partida da aresta
+int GAlfa(Grafo p, int a) {
+    if (!GBexisteIdAresta(p, a)) return 0;
+    return p->arestas[2*(a-1)];
+}
+
+// vertice de chegada da aresta
+int GOmega(Grafo p, int a) {
+    if (!GBexisteIdAresta(p, a)) return 0;
+    return p->arestas[2*(a-1)+1];
+}
+
+// outro extremo da aresta em relacao ao vertice informado
+int GVvizinho(Grafo p, int a, int v1) {
+    int x, y;
+    if (!GBexisteIdAresta(p, a) || !GBexisteIdVertice(p, v1)) return 0;
+    x = GAlfa(p, a);
+    y = GOmega(p, a);
+    if (x == v1) return y;
+    if (y == v1) return x;
+    return 0;
+}
+
