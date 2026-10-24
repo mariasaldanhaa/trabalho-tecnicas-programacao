@@ -29,7 +29,6 @@ Trabalho I da disciplina de **Técnicas de Programação** (Engenharia da Comput
 - [Programa de testes interativo](#-programa-de-testes-interativo)
 - [Validação e testes](#-validação-e-testes)
 - [Limitações e melhorias futuras](#-limitações-e-melhorias-futuras)
-- [Observações sobre a especificação](#-observações-sobre-a-especificação)
 - [Referências](#-referências)
 
 ---
@@ -357,20 +356,6 @@ O que foi entregue segue a especificação, mas há pontos em que o grupo faria 
 - **`GAcriaAresta` não valida os extremos.** A especificação só exige espaço disponível, mas o módulo aceita arestas entre vértices que ainda não foram criados.
 - **Liberação parcial em `GGcriaGrafo`.** Se uma das alocações internas falhar, a memória das outras não é liberada antes de retornar `NULL`.
 - **Sem remoção.** Não há operação para remover vértices ou arestas; isso manteve os identificadores simples, mas limita o uso do módulo.
-
-## 📝 Observações sobre a especificação
-
-O enunciado pede que as suposições sejam registradas. Estas foram as escolhas do grupo onde o texto é omisso ou inconsistente:
-
-| Ponto | Observação | Escolha do grupo |
-|---|---|---|
-| Nome da operação de salvar | A tabela traz `GBsalvaGrado`, mas o exemplo de código usa `GBsalvaGrafo` | Adotado `GBsalvaGrafo` |
-| Vértices de uma aresta | O exemplo 3.2 chama `GValfa` e `GVomega`, mas a tabela define `GAlfa` e `GOmega` | Adotados `GAlfa` e `GOmega` |
-| Fim do percurso de arestas | O exemplo 3.2 testa `a != NULL`, mas a especificação usa `0` para aresta inexistente | Todas as operações retornam `0` |
-| Retorno de `GAproxEntrada` | A saída é nomeada `a1` na tabela, mas o pós-requisito fala de `a2` | Retorna a próxima aresta da estrela de entrada, ou `0` |
-| Grau de vértice com laço | A especificação não diz como contar | O laço conta duas vezes |
-| Grafo dirigido ou não dirigido | A TAD não diferencia os dois | Mesma criação; muda apenas as operações de consulta |
-| Arquivo sem arestas | `GGcriaGrafo` exige `a > 0` | O grafo carregado tem capacidade para uma aresta |
 
 ## 📚 Referências
 
