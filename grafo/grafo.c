@@ -81,11 +81,36 @@ int GBexisteIdVertice(Grafo p, int v) {
 
 // funcao de id da aresta existente
 int GBexisteIdAresta(Grafo p, int a) {
-    for (int i = 0; i < p->A; i++) {
-        if (a == p->arestas[i]) {
-            return 1;
-        }
+
+    // -- aprendizado (so pra registrar pra quando for estudar futuramente)--
+    // como os id's sao sequenciais, nao foi
+    // preciso de for, mas antes eu coloquei da seguinte maneira:
+    // int GBexisteIdAresta(Grafo p, int a) {
+    //      for (int i = 0; i < p->A; i++) {
+    //          if (a == p->arestas[i]) {
+    //              return 1;
+    //          }
+    //      }
+    //      return 0;
+    // }
+    // So que na hora de fazer o teste e ao criar vertices e arestas,
+    // eu percebi que afetou algumas funcoes como GBarestaLaco, GAlfa
+    // GOmega e GVvizinho por conta dessa funcao. Motivo? se eu criasse um
+    // laco e fizesse a verificacao com GBarestaLaco, deveria retornar 'Sim',
+    // porem retornou 'Nao', porque percorria o vetor 'arestas' e comparava o id
+    // informado diretamente com os valores dos vertices armazenados, mas cada
+    // aresta ocupa duas posicoes e seu id eh determinado pela posicao par.
+    // Entao, decidi fazer a busca no vetor por uma verificacao do intervalo do id
+    // RESUMINDO: erro basico de logica
+
+    if (p == NULL) {
+        return 0;
     }
+
+    if (a >= 1 && a <= p->A) {
+        return 1;
+    }
+
     return 0;
 }
 
