@@ -22,9 +22,12 @@ Grafo GGcriaGrafo(int v, int a) {
     p->a = a;
 
     p->vertices = malloc(v * sizeof(int)); // reserva um espaco de memoria para
-    p->arestas = malloc(p->a * 2 * sizeof(int)); // esta sendo reservado espaco duas vezes, porque sao dois vertices
+    p->arestas = malloc(a * sizeof(struct aresta)); // esta sendo reservado espaco duas vezes, porque sao dois vertices
 
     if (p->vertices == NULL || p ->arestas == NULL) {
+        free(p->vertices);
+        free(p->arestas);
+        free(p);
         return NULL;
     }
 
@@ -58,10 +61,15 @@ int GVcriaVertice(Grafo p) {
 
 // funcao para criar aresta
 int GAcriaAresta(Grafo p, int v1, int v2) {
+    if (p == NULL) return 0;
+
+    // so cria se os dois vertices existem
+    if (!GBexisteIdVertice(p, v1) || !GBexisteIdVertice(p, v2)) return 0;
+
     if (p->A < p->a) {
         p->A++; // identificador para cada aresta
-        p->arestas[(p->A - 1) * 2] = v1; // Cada aresta ocupa duas posicoes no vetor: v1 e v2
-        p->arestas[((p->A - 1) * 2) + 1] = v2;
+        p->arestas[p->A - 1].alfa = v1; // cada aresta guarda seus dois vertices
+        p->arestas[p->A - 1].omega = v2;
 
         return p->A;
     } else {
@@ -118,11 +126,11 @@ int GBexisteIdAresta(Grafo p, int a) {
 int GBexisteAresta(Grafo p, int v1, int v2) {
     for (int i = 0; i < p->A; i++) {
         // calculos que foram usados para identificar cada aresta
-        int partida = i * 2;
-        int chegada = i * 2 + 1;
+        int partida = p->arestas[i].alfa;
+        int chegada = p->arestas[i].omega;
 
-        if ((v1 == p->arestas[partida] && v2 == p->arestas[chegada])
-            || (v2 == p->arestas[partida] && v1 == p->arestas[chegada])
+        if ((v1 == partida && v2 == chegada)
+            || (v2 == partida && v1 == chegada)
             ) {
             return 1;
         }
@@ -134,10 +142,10 @@ int GBexisteAresta(Grafo p, int v1, int v2) {
 int GBexisteArestaDir(Grafo p, int v1, int v2) {
     for (int i = 0; i < p->A; i++) {
         // calculos que foram usados para identificar cada aresta
-        int partida = i * 2;
-        int chegada = i * 2 + 1;
+        int partida = p->arestas[i].alfa;
+        int chegada = p->arestas[i].omega;
 
-        if (v1 == p->arestas[partida] && v2 == p->arestas[chegada]) {
+        if (v1 == partida && v2 == chegada) {
             return 1;
         }
     }
@@ -147,11 +155,11 @@ int GBexisteArestaDir(Grafo p, int v1, int v2) {
 // funcao de pegar o identificador de uma aresta dirigida
 int GApegaArestaDir(Grafo p, int v1, int v2) {
     for (int i = 0; i < p->A; i++) {
-        int partida = i * 2;
-        int chegada = i * 2 + 1;
+        int partida = p->arestas[i].alfa;
+        int chegada = p->arestas[i].omega;
 
         // se existir a aresta
-        if (v1 == p->arestas[partida] && v2 == p->arestas[chegada]) {
+        if (v1 == partida && v2 == chegada) {
             int a = i + 1;
             return a;
         }
@@ -163,11 +171,11 @@ int GApegaArestaDir(Grafo p, int v1, int v2) {
 int GApegaAresta(Grafo p, int v1, int v2) {
     for (int i = 0; i < p->A; i++) {
         // calculos que foram usados para identificar cada aresta
-        int partida = i * 2;
-        int chegada = i * 2 + 1;
+        int partida = p->arestas[i].alfa;
+        int chegada = p->arestas[i].omega;
 
-        if ((v1 == p->arestas[partida] && v2 == p->arestas[chegada])
-            || (v2 == p->arestas[partida] && v1 == p->arestas[chegada])
+        if ((v1 == partida && v2 == chegada)
+            || (v2 == partida && v1 == chegada)
             ) {
             int a = i + 1;
             return a;
@@ -193,22 +201,6 @@ int GVprimeiroVertice(Grafo p) {
 
 // funcao para pegar o proximo vertice do grafo
 int GVproximoVertice(Grafo p, int v1) {
-    // -- COLOCAR NO RELATORIO --
-    // como os identificadores dos vertices sao sequenciais,
-    // nao e necessario percorrer o vetor com um for.
-    // a variavel maximo armazena a quantidade de vertices criados.
-    // se nao existir um identificador maior que v1, retorna 0.
-    //
-    // OBS: de acordo com o pos-requisito, devemos retornar o menor
-    // identificador existente que seja maior que v1.
-    // como os identificadores sao sequenciais, basta calcular v1 + 1,
-    // desde que esse identificador exista no grafo.
-    //
-    // como nao ha funcao para remover vertices nesta implementacao,
-    // os identificadores permanecem sequenciais.
-
-    // funcao de protecao antes de acessar a qtd de vertices,
-    // apesar que nao esta no requisito
     if (p == NULL) {
         return 0;
     }
@@ -350,7 +342,7 @@ int GBsalvaGrafo(Grafo p, const char *f) {
 
     fprintf(arq, "%d %d\n", p->V, p->A);
     for (int i = 0; i < p->A; i++) {
-        fprintf(arq, "%d %d\n", p->arestas[2 * i], p->arestas[2 * i + 1]);
+        fprintf(arq, "%d %d\n", p->arestas[i].alfa, p->arestas[i].omega);
     }
 
     if (fclose(arq) != 0) return 0;
@@ -363,8 +355,8 @@ int GIpegaGrau(Grafo p, int v) {
     if (!GBexisteIdVertice(p, v)) return 0;
 
     for (int i = 0; i < p->A; i++) {
-        int v1 = p->arestas[2 * i];
-        int v2 = p->arestas[2 * i + 1];
+        int v1 = p->arestas[i].alfa;
+        int v2 = p->arestas[i].omega;
         if (v1 == v) grau++;
         if (v2 == v) grau++;
     }
@@ -375,7 +367,7 @@ int GIpegaGrau(Grafo p, int v) {
 int GAprimaAresta(Grafo p, int v) {
     if (!GBexisteIdVertice(p, v)) return 0;
     for (int i = 0; i < p->A; i++) {
-        if (p->arestas[2*i] == v || p->arestas[2*i+1] == v) return i + 1;
+        if (p->arestas[i].alfa == v || p->arestas[i].omega == v) return i + 1;
     }
     return 0;
 }
@@ -384,7 +376,7 @@ int GAprimaAresta(Grafo p, int v) {
 int GAproxAresta(Grafo p, int v, int a1) {
     if (!GBexisteIdVertice(p, v)) return 0;
     for (int i = a1; i < p->A; i++) {
-        if (p->arestas[2*i] == v || p->arestas[2*i+1] == v) return i + 1;
+        if (p->arestas[i].alfa == v || p->arestas[i].omega == v) return i + 1;
     }
     return 0;
 }
@@ -393,7 +385,7 @@ int GAproxAresta(Grafo p, int v, int a1) {
 int GAprimaEntrada(Grafo p, int v) {
     if (!GBexisteIdVertice(p, v)) return 0;
     for (int i = 0; i < p->A; i++) {
-        if (p->arestas[2*i+1] == v) return i + 1;
+        if (p->arestas[i].omega == v) return i + 1;
     }
     return 0;
 }
@@ -402,7 +394,7 @@ int GAprimaEntrada(Grafo p, int v) {
 int GAproxEntrada(Grafo p, int v, int a1) {
     if (!GBexisteIdVertice(p, v)) return 0;
     for (int i = a1; i < p->A; i++) {
-        if (p->arestas[2*i+1] == v) return i + 1;
+        if (p->arestas[i].omega == v) return i + 1;
     }
     return 0;
 }
@@ -411,7 +403,7 @@ int GAproxEntrada(Grafo p, int v, int a1) {
 int GAprimaSaida(Grafo p, int v) {
     if (!GBexisteIdVertice(p, v)) return 0;
     for (int i = 0; i < p->A; i++) {
-        if (p->arestas[2*i] == v) return i + 1;
+        if (p->arestas[i].alfa == v) return i + 1;
     }
     return 0;
 }
@@ -420,7 +412,7 @@ int GAprimaSaida(Grafo p, int v) {
 int GAproxSaida(Grafo p, int v, int a1) {
     if (!GBexisteIdVertice(p, v)) return 0;
     for (int i = a1; i < p->A; i++) {
-        if (p->arestas[2*i] == v) return i + 1;
+        if (p->arestas[i].alfa == v) return i + 1;
     }
     return 0;
 }
@@ -428,19 +420,19 @@ int GAproxSaida(Grafo p, int v, int a1) {
 // informa se a aresta e um laco
 int GBarestaLaco(Grafo p, int a) {
     if (!GBexisteIdAresta(p, a)) return 0;
-    return p->arestas[2*(a-1)] == p->arestas[2*(a-1)+1];
+    return p->arestas[a-1].alfa == p->arestas[a-1].omega;
 }
 
 // vertice de partida da aresta
 int GAlfa(Grafo p, int a) {
     if (!GBexisteIdAresta(p, a)) return 0;
-    return p->arestas[2*(a-1)];
+    return p->arestas[a-1].alfa;
 }
 
 // vertice de chegada da aresta
 int GOmega(Grafo p, int a) {
     if (!GBexisteIdAresta(p, a)) return 0;
-    return p->arestas[2*(a-1)+1];
+    return p->arestas[a-1].omega;
 }
 
 // outro extremo da aresta em relacao ao vertice informado

@@ -143,12 +143,16 @@ int main() {
                 scanf("%d", &v2);
 
                 id = GAcriaAresta(p, v1, v2);
-                if (id != 0) printf("Aresta (%d, %d) criado.", v1, v2);
+                if (id != 0) {
+                    printf("Aresta (%d, %d) criado.", v1, v2);
+                } else {
+                    printf("Nao foi possivel criar a aresta.");
+                }
 
                 printf("\n-- Lista de vertices --");
                 for (int i = 0; i < p->A; i++) {
-                    int va = p->arestas[i * 2];
-                    int vb = p->arestas[i * 2 + 1];
+                    int va = p->arestas[i].alfa;
+                    int vb = p->arestas[i].omega;
 
                     printf("\n(%d, %d)", va, vb);
                 }

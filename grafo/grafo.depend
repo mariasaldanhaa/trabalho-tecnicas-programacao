@@ -31,3 +31,16 @@
 	<stdbool.h>
 	"grafo.h"
 
+1792862267 source:c:\users\duda\documents\faculdade\tecnicas-programacao\trabalho-tecnicas-programacao\trabalho-tecnicas-programacao\grafo\grafo.c
+	<stdio.h>
+	<stdlib.h>
+	"grafo.h"
+
+1792847055 c:\users\duda\documents\faculdade\tecnicas-programacao\trabalho-tecnicas-programacao\trabalho-tecnicas-programacao\grafo\grafo.h
+
+1792847055 source:c:\users\duda\documents\faculdade\tecnicas-programacao\trabalho-tecnicas-programacao\trabalho-tecnicas-programacao\grafo\main.c
+	<stdio.h>
+	<stdlib.h>
+	<stdbool.h>
+	"grafo.h"
+
