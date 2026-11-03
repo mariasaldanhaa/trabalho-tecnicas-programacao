@@ -13,27 +13,27 @@ Trabalho I da disciplina de **Técnicas de Programação** (Engenharia da Comput
 
 ---
 
-## 📑 Sumário
+## Sumário
 
-- [Sobre o projeto](#-sobre-o-projeto)
-- [O que foi implementado](#-o-que-foi-implementado)
-- [Estrutura do repositório](#-estrutura-do-repositório)
-- [Conceitos usados](#-conceitos-usados)
-- [A TAD Grafo](#-a-tad-grafo)
-- [Como os dados são guardados](#-como-os-dados-são-guardados)
-- [Decisões de projeto](#-decisões-de-projeto)
-- [O procedimento Gcaminho](#-o-procedimento-gcaminho)
-- [Formato do arquivo de grafo](#-formato-do-arquivo-de-grafo)
-- [Como compilar e executar](#-como-compilar-e-executar)
-- [Exemplos de uso](#-exemplos-de-uso)
-- [Programa de testes interativo](#-programa-de-testes-interativo)
-- [Validação e testes](#-validação-e-testes)
-- [Limitações e melhorias futuras](#-limitações-e-melhorias-futuras)
-- [Referências](#-referências)
+- [Sobre o projeto](#sobre-o-projeto)
+- [O que foi implementado](#o-que-foi-implementado)
+- [Estrutura do repositório](#estrutura-do-repositório)
+- [Conceitos usados](#conceitos-usados)
+- [A TAD Grafo](#a-tad-grafo)
+- [Como os dados são guardados](#como-os-dados-são-guardados)
+- [Decisões de projeto](#decisões-de-projeto)
+- [O procedimento Gcaminho](#o-procedimento-gcaminho)
+- [Formato do arquivo de grafo](#formato-do-arquivo-de-grafo)
+- [Como compilar e executar](#como-compilar-e-executar)
+- [Exemplos de uso](#exemplos-de-uso)
+- [Programa de testes interativo](#programa-de-testes-interativo)
+- [Validação e testes](#validação-e-testes)
+- [Limitações e melhorias futuras](#limitações-e-melhorias-futuras)
+- [Referências](#referências)
 
 ---
 
-## 📖 Sobre o projeto
+## Sobre o projeto
 
 Grafos são modelos matemáticos usados para representar mapas, redes de computadores, circuitos elétricos, máquinas de estados e muitas outras estruturas. Um grafo **G(V, A)** é formado por um conjunto de **vértices** `V` e um conjunto de **arestas** `A` que ligam pares de vértices.
 
@@ -44,7 +44,7 @@ O trabalho tem **duas tarefas**:
 
 O programa principal de correção é fornecido pela professora: ele lê arquivos de entrada pré-definidos, usa o módulo Grafo e compara as saídas com as esperadas. Por isso, a TAD segue **exatamente** os nomes e comportamentos da especificação.
 
-## ✅ O que foi implementado
+## O que foi implementado
 
 - [x] Criação e destruição de grafos com capacidade máxima de vértices e arestas
 - [x] Criação de vértices e arestas com identificadores sequenciais
@@ -56,19 +56,19 @@ O programa principal de correção é fornecido pela professora: ele lê arquivo
 - [x] Programa de testes interativo com menu para todas as operações
 - [ ] `Gcaminho` (módulo `caminho.h` / `caminho.c`): **em desenvolvimento**, será a próxima etapa
 
-## 🗂️ Estrutura do repositório
+## Estrutura do repositório
 
 ```
 trabalho-tecnicas-programacao/
 ├── .vscode/            # configurações do VS Code
 └── grafo/
-    ├── grafo.h         # tipo Grafo e protótipos das operações
+    ├── grafo.h         # tipos Aresta e Grafo e protótipos das operações
     ├── grafo.c         # implementação da TAD
     ├── [main.c]        # programa de testes interativo (menu)
     └── [caminho.h / caminho.c]   # procedimento Gcaminho (a criar)
 ```
 
-## 🧠 Conceitos usados
+## Conceitos usados
 
 | Conceito | Definição adotada no trabalho |
 |---|---|
@@ -84,18 +84,23 @@ trabalho-tecnicas-programacao/
 | **Estrela de entrada `EE(v)`** | Arestas que chegam em `v` |
 | **Estrela de saída `ES(v)`** | Arestas que saem de `v` |
 
-## 🧱 A TAD Grafo
+## A TAD Grafo
 
-O tipo `Grafo` é um ponteiro para uma `struct`:
+O tipo `Grafo` é um ponteiro para uma `struct`. Cada aresta é representada por uma `struct aresta`, que guarda seus dois extremos:
 
 ```c
+typedef struct aresta {
+    int alfa,  // vertice de partida
+        omega; // vertice de chegada
+} *Aresta;
+
 typedef struct grafo {
-    int v,         // máximo de vértices
-        a,         // máximo de arestas
-        V,         // quantidade atual de vértices
-        A,         // quantidade atual de arestas
-        *vertices, // espaço para os vértices
-        *arestas;  // espaço para as arestas
+    int v,          // maximo de vertices
+        a,          // maximo de arestas
+        V,          // quantidade atual de vertices
+        A,          // quantidade atual de arestas
+        *vertices;  // espaco para os vertices
+    Aresta arestas; // espaco para as arestas
 } *Grafo;
 ```
 
@@ -120,7 +125,7 @@ Nenhuma rotina imprime mensagem de erro. Quando algo dá errado, ela retorna o c
 | `GGcriaGrafo(v, a)` | Cria um grafo com capacidade para `v` vértices e `a` arestas (`NULL` se faltar memória) |
 | `GGdestroiGrafo(p)` | Libera a memória do grafo e retorna ponteiro nulo |
 | `GVcriaVertice(p)` | Cria um vértice e retorna seu identificador (`0` se a capacidade acabou) |
-| `GAcriaAresta(p, v1, v2)` | Cria a aresta `(v1, v2)` e retorna seu identificador (`0` se a capacidade acabou) |
+| `GAcriaAresta(p, v1, v2)` | Cria a aresta `(v1, v2)` e retorna seu identificador (`0` se a capacidade acabou ou se algum dos vértices não existe) |
 | `GBexisteIdVertice(p, v)` | O vértice existe? |
 | `GBexisteIdAresta(p, a)` | A aresta existe? |
 | `GBexisteAresta(p, v1, v2)` | Existe aresta **não dirigida** entre `v1` e `v2`? |
@@ -154,35 +159,51 @@ Nenhuma rotina imprime mensagem de erro. Quando algo dá errado, ela retorna o c
 
 > A TAD guarda **apenas a estrutura** do grafo: quais vértices existem e quais arestas os ligam. Informações extras, como a distância de cada aresta, não ficam dentro do grafo, e sim em vetores separados em que o identificador da aresta é a posição (por exemplo, `pesos[a]`). Isso será usado no `Gcaminho`.
 
-## 💾 Como os dados são guardados
+## Como os dados são guardados
 
-Os vértices ficam em um vetor de `v` posições e as arestas em um **vetor plano de `2 × a` posições**: cada aresta ocupa duas posições seguidas, a de partida e a de chegada. O identificador da aresta é a posição dela na ordem de criação (começando em 1).
+Os vértices ficam em um vetor de `v` posições. As arestas ficam em um **vetor de `a` estruturas `aresta`**, e cada uma guarda seus dois extremos nos campos `alfa` (partida) e `omega` (chegada). O identificador da aresta é a posição dela na ordem de criação (começando em 1).
 
-Exemplo com o grafo dirigido da Figura 1 da especificação (8 arestas):
+Exemplo com um grafo de 3 vértices e 3 arestas, `(1, 2)`, `(2, 3)` e `(3, 3)` (esta última é um laço):
 
+```mermaid
+flowchart LR
+    v1((1)) -->|aresta 1| v2((2))
+    v2 -->|aresta 2| v3((3))
+    v3 -->|aresta 3, laço| v3
 ```
-id da aresta:   1     2     3     4     5     6     7     8
-arestas[]:    [ 6  1 | 6  3 | 3  6 | 1  3 | 1  2 | 2  3 | 2  2 | 5  4 ]
-índice:         0  1   2  3   4  5   6  7   8  9  10 11  12 13  14 15
-```
 
-A aresta de identificador `k` está nas posições `2*(k-1)` (partida) e `2*(k-1)+1` (chegada).
+**Vetor `vertices`** (guarda os identificadores dos vértices existentes):
 
-## 🏗️ Decisões de projeto
+| índice 0 | índice 1 | índice 2 |
+|:---:|:---:|:---:|
+| 1 | 2 | 3 |
+
+**Vetor `arestas`** (uma estrutura `aresta` por posição):
+
+| campo | índice 0 (aresta 1) | índice 1 (aresta 2) | índice 2 (aresta 3) |
+|---|:---:|:---:|:---:|
+| **alfa** (partida) | 1 | 2 | 3 |
+| **omega** (chegada) | 2 | 3 | 3 |
+
+A aresta de identificador `k` está na posição `k-1` do vetor: `arestas[k-1].alfa` é o vértice de partida e `arestas[k-1].omega` é o de chegada.
+
+> A estrutura `aresta` foi definida pela professora e adotada no trabalho.
+
+## Decisões de projeto
 
 - **Identificadores sequenciais.** O vértice criado em n-ésimo lugar recebe o identificador n, e o mesmo vale para as arestas. Como não existe remoção, os identificadores continuam sequenciais, e isso torna `GVprimeiroVertice`, `GVproximoVertice`, `GAprimeiraAresta` e `GAproximaAresta` operações de custo constante, sem varrer vetores.
 - **`GVproximoVertice` e `GAproximaAresta`.** Retornam `v1 + 1` (ou `a1 + 1`) enquanto o resultado existir no grafo, e `0` caso contrário. Se o identificador recebido for menor que 1 e houver elementos, retornam `1`.
-- **Arestas em vetor plano.** Guardar as duas pontas lado a lado evita criar uma `struct` por aresta e simplifica a alocação: um único `malloc` de `2 × a` inteiros.
+- **Arestas em vetor de estruturas.** Cada aresta é uma `struct aresta` com os campos `alfa` e `omega`. Isso deixa o código mais legível (`arestas[i].alfa` no lugar de `arestas[2*i]`), e a alocação continua sendo um único `malloc` de `a` elementos.
 - **Buscas lineares.** As operações de existência, busca de aresta, grau e estrelas percorrem o vetor de arestas (custo proporcional a `|A|`). Para percorrer uma estrela, `GAprox...` retoma a busca logo depois da aresta anterior, então o percurso completo de uma estrela custa `O(|A|)` no total.
 - **Grau.** Um laço conta duas vezes no grau do vértice. A mesma função serve para grafos dirigidos (entrada + saída) e não dirigidos.
 - **Dirigido ou não dirigido.** O grafo é criado do mesmo jeito nos dois casos. O que muda é o conjunto de operações usado para consultá-lo (`GBexisteAresta` contra `GBexisteArestaDir`, `GAprimaAresta` contra `GAprimaEntrada`/`GAprimaSaida`).
 - **`GVvizinho`.** Retorna `0` se a aresta ou o vértice não existirem, ou se o vértice não for extremo da aresta. Em um laço, o vizinho é o próprio vértice.
-- **Tratamento de erros.** `GGcriaGrafo` retorna `NULL` se a alocação falhar. `GVcriaVertice` e `GAcriaAresta` retornam `0` quando a capacidade máxima é atingida. Algumas rotinas checam ponteiro nulo por segurança, apesar de a especificação dizer que não é necessário.
+- **Tratamento de erros.** `GGcriaGrafo` retorna `NULL` se a alocação falhar. `GVcriaVertice` retorna `0` quando a capacidade máxima é atingida, e `GAcriaAresta` retorna `0` quando a capacidade é atingida ou quando algum dos extremos não é um vértice existente. Algumas rotinas checam ponteiro nulo por segurança, apesar de a especificação dizer que não é necessário.
 - **Carga de arquivo.** `GGcarregaGrafo` valida o cabeçalho e cada linha, e libera a memória e fecha o arquivo em qualquer falha. Um arquivo com zero arestas é aceito, e o grafo é criado com capacidade para uma aresta, porque `GGcriaGrafo` exige `a > 0`.
 
-## 🧭 O procedimento Gcaminho
+## O procedimento Gcaminho
 
-> 🚧 **Em desenvolvimento.** Esta tarefa ainda não foi implementada. A seção abaixo descreve o que a especificação pede.
+> **Em desenvolvimento.** Esta tarefa ainda não foi implementada. A seção abaixo descreve o que a especificação pede.
 
 ```c
 void Gcaminho(Grafo g, float *pesos, int a, int b);
@@ -209,7 +230,7 @@ void Gcaminho(Grafo g, float *pesos, int a, int b);
 
 **Algoritmo previsto:** Dijkstra.
 
-## 📄 Formato do arquivo de grafo
+## Formato do arquivo de grafo
 
 Arquivo texto. A primeira linha traz o número de vértices e o de arestas. Cada linha seguinte descreve uma aresta com o vértice de partida e o de chegada.
 
@@ -223,7 +244,7 @@ Exemplo (grafo da Figura 2 da especificação: 6 vértices e 4 arestas):
 5 4
 ```
 
-## ⚙️ Como compilar e executar
+## Como compilar e executar
 
 ### Pré-requisitos
 
@@ -269,7 +290,7 @@ add_executable(testes main.c grafo.c)
 
 Depois, abra a pasta `grafo/` no CLion (**File > Open**), espere o CMake carregar e execute com `Shift+F10`. Quando o `Gcaminho` estiver pronto, acrescente `caminho.c` na lista do `add_executable`.
 
-## 💡 Exemplos de uso
+## Exemplos de uso
 
 **Criar e salvar um grafo:**
 
@@ -323,7 +344,7 @@ Saída esperada para o grafo salvo no exemplo anterior:
 (4,5)
 ```
 
-## 🖥️ Programa de testes interativo
+## Programa de testes interativo
 
 O arquivo de testes oferece um menu no terminal para exercitar cada operação da TAD sem escrever código:
 
@@ -339,13 +360,28 @@ O arquivo de testes oferece um menu no terminal para exercitar cada operação d
 | 28 e 29 | Laço, `GAlfa`, `GOmega` e `GVvizinho` |
 | 30 | Sair |
 
-## 🧪 Validação e testes
+## Validação e testes
 
-Cada operação da TAD foi exercitada pelo programa de testes interativo.
+Cada operação da TAD foi exercitada pelo programa de testes interativo. Os testes usaram um grafo com capacidade para 4 vértices e 5 arestas, com 3 vértices e as arestas `(1, 2)`, `(2, 3)` e `(3, 3)` (esta última é um laço).
 
-[vou colocar ainda]
+| Caso testado | Resultado esperado |
+|---|---|
+| Quantidades atuais e máximas (opções 15 a 18) | 3 vértices (máximo 4) e 3 arestas (máximo 5) |
+| Existência de vértice e aresta com identificador válido e inválido | Existe para os ids criados e não existe para os demais |
+| Aresta não dirigida com os extremos nas duas ordens | `(1, 2)` e `(2, 1)` existem; `(1, 3)` não existe |
+| Aresta dirigida | `(1, 2)` existe; `(2, 1)` não existe |
+| Identificador de aresta a partir dos extremos | `(2, 3)` retorna 2, nas versões dirigida e não dirigida |
+| Percurso de vértices e arestas | Do primeiro ao último, e `0` quando não há próximo |
+| Grau dos vértices 1, 2 e 3 | 1, 2 e 3 (o laço conta duas vezes no vértice 3) |
+| Arestas incidentes, de entrada e de saída | Retornam as arestas corretas e `0` quando acabam |
+| `GBarestaLaco`, `GAlfa`, `GOmega` e `GVvizinho` | A aresta 3 é laço; `GAlfa` e `GOmega` retornam os extremos certos; o vizinho do laço é o próprio vértice |
+| Limite de capacidade | Vértices e arestas além do máximo são recusados |
+| Aresta com vértice inexistente, como `(1, 99)` | Recusada, e a quantidade de arestas não muda |
+| Salvar e carregar um grafo | O grafo carregado mantém as mesmas quantidades e arestas do original |
 
-## 🔧 Limitações e melhorias futuras
+Também foram tratados os casos de grafo ainda não criado no menu e de ponteiro nulo nas funções de consulta.
+
+## Limitações e melhorias futuras
 
 O que foi entregue segue a especificação, mas há pontos em que o grupo faria diferente numa próxima versão:
 
@@ -353,11 +389,9 @@ O que foi entregue segue a especificação, mas há pontos em que o grupo faria 
 - **Vetor `vertices` redundante.** Como o identificador do vértice `i` é sempre `i`, o vetor guarda só `1, 2, 3, …`. Dá para guardar apenas a contagem `V` e checar existência com `1 <= v && v <= V`, em tempo constante.
 - **Buscas lineares.** Estrelas, grau e busca de aresta custam `O(|A|)` por chamada. Com listas de adjacência (ou vetores de arestas por vértice), a estrela de um vértice custaria `O(grau)`.
 - **Sem proteção contra inclusão dupla.** `grafo.h` não tem `#ifndef`/`#define`, então incluí-lo duas vezes na mesma unidade gera erro de redefinição.
-- **`GAcriaAresta` não valida os extremos.** A especificação só exige espaço disponível, mas o módulo aceita arestas entre vértices que ainda não foram criados.
-- **Liberação parcial em `GGcriaGrafo`.** Se uma das alocações internas falhar, a memória das outras não é liberada antes de retornar `NULL`.
 - **Sem remoção.** Não há operação para remover vértices ou arestas; isso manteve os identificadores simples, mas limita o uso do módulo.
 
-## 📚 Referências
+## Referências
 
 - SCHILDT, Herbert. C, completo e total. Tradução e revisão técnica de Roberto 
 Carlos Mayer. 3. ed. rev. e atual. São Paulo: Makron Books, 1997.
