@@ -46,3 +46,4 @@ int GBarestaLaco(Grafo p, int a);
 int GAlfa(Grafo p, int a);
 int GOmega(Grafo p, int a);
 int GVvizinho(Grafo p, int a, int v1);
+int GVbuscaProfundidade(Grafo p, int vInicial);

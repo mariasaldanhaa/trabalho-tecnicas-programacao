@@ -39,12 +39,13 @@ int main() {
         printf("\n27 - Pegar proxima aresta de saida");
         printf("\n28 - Verificar se aresta e laco");
         printf("\n29 - Pegar alfa, omega e vizinho");
-        printf("\n30 - Sair");
+        printf("\n30 - Busca por profundidade");
+        printf("\n31 - Sair");
 
         printf("\nOpcao: ");
         scanf("%d", &opcao);
 
-        while (opcao < 1 || opcao > 30) {
+        while (opcao < 1 || opcao > 31) {
             printf("\n---- OPCOES ----");
             printf("\n1 - Criar Grafo");
             printf("\n2 - Deletar Grafo");
@@ -74,7 +75,8 @@ int main() {
             printf("\n27 - Pegar proxima aresta de saida");
             printf("\n28 - Verificar se aresta e laco");
             printf("\n29 - Pegar alfa, omega e vizinho");
-            printf("\n30 - Sair");
+            printf("\n30 - Busca por profundidade");
+            printf("\n31 - Sair");
 
             printf("\nOpcao: ");
             scanf("%d", &opcao);
@@ -463,6 +465,16 @@ int main() {
                 break;
             }
             case 30:
+                int vInicial;
+
+                printf("\nInforme o vertice inicial para a busca por profundidade: ");
+                scanf("%d", &vInicial);
+
+                GVbuscaProfundidade(p, vInicial);
+
+                printf("\n");
+                break;
+            case 31:
                 continuar = 0;
                 break;
         }

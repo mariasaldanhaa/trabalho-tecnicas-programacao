@@ -446,3 +446,49 @@ int GVvizinho(Grafo p, int a, int v1) {
     return 0;
 }
 
+int GVbuscaProfundidade(Grafo p, int vInicial) {
+    if (p == NULL || !GBexisteIdVertice(p, vInicial)) { return 0;}
+
+    int totalVertice = GInumeroVertices(p);
+
+    int *visitado = calloc(totalVertice + 1, sizeof(int));
+    int *fila = malloc(totalVertice * sizeof(int));
+
+    visitado[0] = 1;
+
+    int inicio = 0;
+    int fim = 0;
+    int ordemVisita = 1;
+
+    fila[fim++] = vInicial;
+    visitado[vInicial] = ordemVisita;
+
+    while (inicio < fim) {
+        int atual = fila[inicio++];
+
+        int aresta = GAprimaAresta(p, atual);
+
+        while (aresta != 0) {
+            int vizinho = GVvizinho(p, aresta, atual);
+
+            if (vizinho != 0 && !visitado[vizinho]) {
+                visitado[vizinho] = ++ordemVisita;
+                fila[fim++] = vizinho;
+            }
+            aresta = GAproxAresta(p, atual, aresta);
+        }
+    }
+
+    printf("\nOrdem de visita: ");
+
+    for (int ordem = 1; ordem <= ordemVisita; ordem++) {
+        for (int i = 1; i <= totalVertice; i++) {
+            if (visitado[i] == ordem) {
+                printf("%d -> ", i);
+            }
+        }
+    }
+
+    free(fila);
+    free(visitado);
+}
